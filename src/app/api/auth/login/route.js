@@ -1,21 +1,34 @@
 import User from '@/models/user';
 import { connectToDatabase } from '@/lib/db';
-import { generateToken } from '@/middleware/auth'
+import { generateToken } from '@/middleware/auth';
+import { logAction } from '@/lib/logAction';
+import { verifyToken } from '@/middleware/auth'; 
 
 export const POST = async (req) => {
   await connectToDatabase();
-  const { email, password } = await req.json(); // Ensure you're reading the JSON body correctly
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 400 });
+  const token = req.cookies.get('token');
+  if (token) {
+    const user = await verifyToken(token);
+    if (user) {
+      return new Response(JSON.stringify({ redirect: '/' }), { status: 200 });
+    }
   }
 
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 400 });
-  }
+  const { email, password } = await req.json();
 
-  const token = generateToken(user);
-  return new Response(JSON.stringify({ message: 'Login successful', token }), { status: 200 });
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password))) {
+      return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 400 });
+    }
+
+    const newToken = generateToken(user);
+    await logAction("login", user._id, user.role);
+
+    return new Response(JSON.stringify({ message: 'Login successful', token: newToken }), { status: 200 });
+  } catch (error) {
+    console.error('Error during login:', error);
+    return new Response(JSON.stringify({ error: 'An error occurred during login' }), { status: 500 });
+  }
 };

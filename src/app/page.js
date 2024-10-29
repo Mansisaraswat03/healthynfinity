@@ -1,3 +1,4 @@
+import Logout from "@/components/logout";
 import Link from "next/link";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <Link href="/login" className="text-blue-500">
         login
       </Link>
+      <Logout/>
       <p className="mt-10 text-4xl font-bold mx-4">PS: I have not payed much attention to UI of the project .If you want me to make UI user interactive and attractive I can do that .This project shows that I know concepts of authentication and authorization and can use it with mernstack to deliver the project.</p>
     </div>
   );

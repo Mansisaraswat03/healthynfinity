@@ -28,6 +28,7 @@ export default function SignupPage() {
       });
       localStorage.setItem("token", response.data.token);
       alert("Signup successful");
+      window.location.href = "/login";
     } catch (error) {
       console.error(error); // Log the error for debugging
       alert(error.response?.data?.error || "Signup failed");
