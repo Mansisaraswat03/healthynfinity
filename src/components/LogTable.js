@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 function LogTable() {
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState(null);
+  const [actionType, setActionType] = useState(""); 
 
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch(`/api/logs`);
-        
+        const query = actionType ? `?actionType=${actionType}` : "";
+        const response = await fetch(`/api/logs${query}`);
+
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
@@ -21,12 +23,34 @@ function LogTable() {
         setError("Failed to fetch logs. Please try again later.");
       }
     };
-    
+
     fetchLogs();
-  }, []);
+  }, [actionType]); // Re-fetch logs whenever actionType changes
+
+  const handleActionTypeChange = (e) => {
+    setActionType(e.target.value);
+  };
 
   return (
     <div className="overflow-x-auto">
+      <div className="mb-4 flex items-center gap-4">
+        <label htmlFor="actionTypeFilter" className="font-semibold">
+          Filter by Action Type:
+        </label>
+        <select
+          id="actionTypeFilter"
+          className="p-2 border rounded"
+          value={actionType}
+          onChange={handleActionTypeChange}
+        >
+          <option value="">All</option>
+          <option value="login">Login</option>
+          <option value="signup">Signup</option>
+          <option value="logout">Logout</option>
+          <option value="delete_user">Delete User</option>
+        </select>
+      </div>
+      
       {error ? (
         <p className="text-red-500">{error}</p>
       ) : (
@@ -39,6 +63,8 @@ function LogTable() {
               <th className="px-4 py-2">Role</th>
             </tr>
           </thead>
+         {
+          logs?.length > 0 ? 
           <tbody>
             {logs.map((log) => (
               <tr key={log._id}>
@@ -50,7 +76,15 @@ function LogTable() {
                 <td className="border px-4 py-2">{log?.role}</td>
               </tr>
             ))}
+          </tbody> :
+          <tbody>
+            <tr>
+              <td colSpan="4" className="border px-4 py-2 text-center">
+                No logs found.
+              </td>
+            </tr>
           </tbody>
+         }
         </table>
       )}
     </div>
