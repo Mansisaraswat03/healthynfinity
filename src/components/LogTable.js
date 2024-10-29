@@ -10,7 +10,6 @@ function LogTable() {
       try {
         const response = await fetch(`/api/logs`);
         
-        // Check if the response is OK and can be parsed as JSON
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
@@ -43,9 +42,9 @@ function LogTable() {
           <tbody>
             {logs.map((log) => (
               <tr key={log._id}>
-                <td className="border px-4 py-2">{log?.actionType}</td>
+                <td className="border px-4 py-2">{log?.type}</td>
                 <td className="border px-4 py-2">
-                  {new Date(log.timestamp).toLocaleString()}
+                  {new Date(log?.timestamp).toLocaleString()}
                 </td>
                 <td className="border px-4 py-2">{log?.userId}</td>
                 <td className="border px-4 py-2">{log?.role}</td>

@@ -1,16 +1,16 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-// import { verifyToken } from '@/middleware/auth';
+import { verifyToken } from '@/middleware/auth';
 import { logAction } from '@/lib/logAction';
 
 const Logout = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    // const token = document.cookie.split('=')[1];
-    // const user = verifyToken(token);
-    await logAction('logout');
+    const token = document.cookie.split('=')[1];
+    const user = verifyToken(token);
+    await logAction('logout', user?._id, user?.role);
     document.cookie = "token=; Max-Age=0; path=/;";
     router.push('/login');
   };
