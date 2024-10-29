@@ -1,8 +1,8 @@
 import User from '@/models/user';
 import { connectToDatabase } from '@/lib/db';
-import { generateToken } from '@/middleware/auth';
+import { generateToken } from '@/utils/auth';
 import { logAction } from '@/lib/logAction';
-import { verifyToken } from '@/middleware/auth'; 
+import { verifyToken } from '@/utils/auth'; 
 
 export const POST = async (req) => {
   await connectToDatabase();

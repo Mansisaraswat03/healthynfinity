@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { verifyToken } from '@/middleware/auth';
+import { verifyToken } from '@/utils/auth';
 import { logAction } from '@/lib/logAction';
 function getCookie(name) {
   const value = `; ${document.cookie}`;
