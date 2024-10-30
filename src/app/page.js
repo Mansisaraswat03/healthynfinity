@@ -26,6 +26,7 @@ export default function Home() {
         normal user credentials after signup.I have not created redux store or
         context to store filter and pagination values but i have knowledge of
         all that too I can explain all those concepts in further meeting...
+        Further we can create dynamic routes to access different types of logs.
       </p>
     </div>
   );
