@@ -11,6 +11,7 @@ export default function SignupForm() {
     confirmPassword: ""
   });
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false); 
 
   useEffect(() => {
     const token = getCookie("token");
@@ -27,9 +28,11 @@ export default function SignupForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setPending(true);
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
+      setPending(false);
       return;
     }
 
@@ -42,8 +45,10 @@ export default function SignupForm() {
       alert("Signup successful");
       window.location.href = "/login";
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error(error);
       alert(error.response?.data?.error || "Signup failed");
+    } finally {
+      setPending(false); 
     }
   };
 
@@ -78,8 +83,9 @@ export default function SignupForm() {
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        disabled={pending} 
       >
-        Signup
+        {pending ? "Signing up..." : "Signup"}
       </button>
       <p>
         Already have an account?{" "}

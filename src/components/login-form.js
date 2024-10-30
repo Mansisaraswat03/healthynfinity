@@ -6,6 +6,7 @@ import { getCookie } from "@/utils/auth";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [pending, setPending] = useState(false); 
 
   useEffect(() => {
     const token = getCookie("token");
@@ -21,13 +22,17 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPending(true); 
+
     try {
       const response = await axios.post("/api/auth/login", formData);
       document.cookie = `token=${response.data.token}; path=/;`;
       alert("Login successful");
       window.location.href = "/logs";
     } catch (error) {
-      alert(error.response.data.error || "Login failed");
+      alert(error.response?.data?.error || "Login failed");
+    } finally {
+      setPending(false); 
     }
   };
 
@@ -43,6 +48,7 @@ export default function LoginForm() {
         placeholder="Email"
         onChange={handleChange}
         className="p-1 outline-none"
+        required
       />
       <input
         type="password"
@@ -50,12 +56,14 @@ export default function LoginForm() {
         placeholder="Password"
         onChange={handleChange}
         className="p-1 outline-none"
+        required
       />
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        disabled={pending} 
       >
-        Login
+        {pending ? "Logging in..." : "Login"} 
       </button>
       <p>
         Don&apos;t have an account?{" "}

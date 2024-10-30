@@ -3,11 +3,6 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { getCookie, verifyToken } from '@/utils/auth';
 import { logAction } from '@/lib/logAction';
-// function getCookie(name) {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop().split(";").shift();
-// }
 const Logout = () => {
   const router = useRouter();
 
